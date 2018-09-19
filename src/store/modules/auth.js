@@ -1,12 +1,18 @@
 import axios from 'axios'
 
 const state = {
-  token: localStorage.getItem('user-token') || '',
+  tokens: JSON.parse(localStorage.getItem('SB-Vue-admin')) || {},
   status: '',
 }
 
 const getters = {
-  isAuthenticated: state => !!state.token,
+  isAuthenticated: function (state) {
+    if (state.tokens && state.tokens.auth && state.tokens.auth.accessToken && state.tokens.auth.refreshToken && state.tokens.auth.expires_in) {
+      return true
+    } else {
+      return false
+    }
+  },
   authStatus: state => state.status,
 }
 
@@ -14,13 +20,17 @@ const mutations = {
   AUTH_REQUEST (state) {
     state.status = 'loading'
   },
-  AUTH_SUCCESS (state, token) {
+  AUTH_SUCCESS (state, authData) {
     state.status = 'success'
-    state.token = token
+    state.tokens = JSON.parse(authData)
   },
   AUTH_ERROR (state) {
     state.status = 'error'
   },
+  AUTH_LOGOUT (state) {
+    state.status = ''
+    state.tokens = {}
+  }
 }
 
 const actions = {
@@ -30,13 +40,16 @@ const actions = {
             commit('AUTH_REQUEST')
             axios({url: '/adminlogin', data: user, method: 'POST' })
             .then(resp => {
-                const token = resp.data.token
-                localStorage.setItem('user-token', token)
+                const { accessToken, refreshToken, expires_in } = resp.data
+                const setDataResp = JSON.stringify({ auth: {
+                  "accessToken": accessToken, "refreshToken": refreshToken, "expires_in": expires_in
+                } })
+                localStorage.setItem('SB-Vue-admin', setDataResp)
                 // Add the following line:
-                axios.defaults.headers.common['x-access-token'] = token
-                commit('AUTH_SUCCESS', token)
+                axios.defaults.headers.common['x-access-token'] = accessToken
+                commit('AUTH_SUCCESS', setDataResp)
                // dispatch(USER_REQUEST)
-               console.log('token= ', token)
+               console.log('token= ', setDataResp)
                console.log('resp= ', resp)
                 resolve(resp)
             })
@@ -51,10 +64,10 @@ const actions = {
     
     AUTH_LOGOUT ({commit, dispatch}) {
         return new Promise((resolve, reject) => {
-            commit(AUTH_LOGOUT)
-            localStorage.removeItem('user-token')
+            commit('AUTH_LOGOUT')
+            localStorage.removeItem('SB-Vue-admin')
             // remove the axios default header
-            delete axios.defaults.headers.common['Authorization']
+            delete axios.defaults.headers.common['x-access-token']
             resolve()
         })
     }

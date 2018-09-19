@@ -55,7 +55,7 @@
       ]
     }),
     computed: {
-      test (){return this.$store.getters.isAuthenticated}
+      test (){return this.$store.state.auth.status}
     },
     methods: {
       submit () {

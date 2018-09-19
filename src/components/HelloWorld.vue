@@ -16,21 +16,27 @@
         </blockquote>
       </v-layout>
     </v-slide-y-transition>
+    <button @click="logout">Вийти</button>
   </v-container>
 </template>
 <script>
   import axios from 'axios'
+  import {mapActions} from 'vuex'
   export default {
     computed: {
-      qqq: function(){ return this.$store.state.auth.token }
+      qqq: function(){ return this.$store.state.auth }
     },
     methods: {
       tt () {
-      	axios.defaults.headers.common['x-access-token'] = this.$store.state.auth.token
-        axios.post('http://localhost:7070/admin/test').then(r=>{
+      	// axios.defaults.headers.common['x-access-token'] = this.$store.state.auth.tokens.auth.accessToken
+        axios.post('/test').then(r=>{
         	console.log('axios ', r)
-        }).catch((e)=>{console.log('helloworld ',e.response.data.message)})      }
+        }).catch((e)=>{console.log('helloworld ',e.response.data.message)})      },
+        logout () {
+      this.$store.dispatch('AUTH_LOGOUT').then((e)=>console.log('logout  ', e))
     }
+    },
+    
   }
 
 

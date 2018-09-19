@@ -6,12 +6,14 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import store from './store'
+import axios from 'axios'
 
 Vue.use(Vuetify)
 
 
 Vue.config.productionTip = false
 
+axios.defaults.baseURL = (process.env.NODE_ENV !== 'production') ? 'http://localhost:7070/admin' : ''
 
 
 /* eslint-disable no-new */
