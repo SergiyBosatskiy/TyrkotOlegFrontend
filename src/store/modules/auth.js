@@ -56,7 +56,7 @@ const actions = {
             .catch(err => {
               console.log('err',err.response)
                 commit('AUTH_ERROR', err)
-                localStorage.removeItem('user-token')
+                localStorage.removeItem('SB-Vue-admin')
                 reject(err)
             })
         })

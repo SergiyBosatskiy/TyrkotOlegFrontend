@@ -40,8 +40,8 @@
       </v-btn>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>menu</v-icon>
+      <v-btn icon @click.stop="logout">
+        <v-icon>clear</v-icon>
       </v-btn>
     </v-toolbar>
     <v-content>
@@ -86,6 +86,12 @@ export default {
       title: 'Vuetify.js'
     }
   },
-  name: 'layout'
+  name: 'layout',
+  methods: {
+    logout() {
+      this.$store.dispatch('AUTH_LOGOUT')
+      .then(()=>this.$router.push('/login'))
+    }
+  }
 }
 </script>

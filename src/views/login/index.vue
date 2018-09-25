@@ -63,8 +63,8 @@
           // Native form submission is not yet supported
           const { login, password } = this
           this.$store.dispatch('AUTH_REQUEST', { login, password })
-          .then( () => { this.$router.push('/') })
-          .catch( (err) => { console.log('Помилка актіонc vuex store вернув реджект ',err)})
+          .then(() => this.$router.push('/'))
+          .catch((err) => console.log('Помилка актіонc vuex store вернув реджект ',err))
      } }
     }
   }

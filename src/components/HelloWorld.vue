@@ -21,7 +21,6 @@
 </template>
 <script>
   import axios from 'axios'
-  import {mapActions} from 'vuex'
   export default {
     computed: {
       qqq: function(){ return this.$store.state.auth }
@@ -33,7 +32,8 @@
         	console.log('axios ', r)
         }).catch((e)=>{console.log('helloworld ',e.response.data.message)})      },
         logout () {
-      this.$store.dispatch('AUTH_LOGOUT').then((e)=>console.log('logout  ', e))
+      this.$store.dispatch('AUTH_LOGOUT')
+      .then(()=>this.$router.push('/login'))
     }
     },
     
