@@ -3,6 +3,7 @@ import axios from 'axios'
 const state = {
   tokens: JSON.parse(localStorage.getItem('SB-Vue-admin')) || {},
   status: '',
+  skipInterceptor: false
 }
 
 const getters = {
@@ -30,6 +31,12 @@ const mutations = {
   AUTH_LOGOUT (state) {
     state.status = ''
     state.tokens = {}
+  },
+  AUTH_REFRESH_TOKEN (state, refreshData) {
+    state.tokens = JSON.parse(refreshData)
+  },
+  SKIP_INTERCEPTOR (state, toogle) {
+    state.skipInterceptor = toogle
   }
 }
 
@@ -46,28 +53,45 @@ const actions = {
                 } })
                 localStorage.setItem('SB-Vue-admin', setDataResp)
                 // Add the following line:
-                axios.defaults.headers.common['x-access-token'] = accessToken
+                // axios.defaults.headers.common['x-access-token'] = accessToken
                 commit('AUTH_SUCCESS', setDataResp)
-               // dispatch(USER_REQUEST)
-               console.log('token= ', setDataResp)
-               console.log('resp= ', resp)
                 resolve(resp)
             })
             .catch(err => {
-              console.log('err',err.response)
                 commit('AUTH_ERROR', err)
                 localStorage.removeItem('SB-Vue-admin')
                 reject(err)
             })
         })
     },
-    
+    REFRESH_TOKEN ({commit, dispatch}) {
+      return new Promise((resolve, reject) => {
+        commit('SKIP_INTERCEPTOR', true)
+        axios({url: '/refresh-token', data: { 'refreshToken': state.tokens.auth.refreshToken }, method: 'POST' })
+        .then(resp => {
+            const { accessToken, refreshToken, expires_in } = resp.data
+            const setDataResp = JSON.stringify({ auth: {
+              "accessToken": accessToken, "refreshToken": refreshToken, "expires_in": expires_in
+            } })
+            localStorage.setItem('SB-Vue-admin', setDataResp)
+            commit('AUTH_REFRESH_TOKEN', setDataResp)
+            commit('SKIP_INTERCEPTOR', false)
+            resolve(resp)
+        })
+        .catch(err => {
+          localStorage.removeItem('SB-Vue-admin')
+          commit('SKIP_INTERCEPTOR', false)
+          commit('AUTH_LOGOUT')
+          reject(err)
+        })
+      })
+    },
     AUTH_LOGOUT ({commit, dispatch}) {
         return new Promise((resolve, reject) => {
             commit('AUTH_LOGOUT')
             localStorage.removeItem('SB-Vue-admin')
             // remove the axios default header
-            delete axios.defaults.headers.common['x-access-token']
+            // delete axios.defaults.headers.common['x-access-token']
             resolve()
         })
     }

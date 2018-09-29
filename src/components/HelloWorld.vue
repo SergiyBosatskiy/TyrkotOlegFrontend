@@ -28,7 +28,7 @@
     methods: {
       tt () {
       	// axios.defaults.headers.common['x-access-token'] = this.$store.state.auth.tokens.auth.accessToken
-        axios.post('/test').then(r=>{
+        axios.post('/test', {provirka: 'mememeemem'}).then(r=>{
         	console.log('axios ', r)
         }).catch((e)=>{console.log('helloworld ',e.response.data.message)})      },
         logout () {

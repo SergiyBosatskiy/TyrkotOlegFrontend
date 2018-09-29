@@ -64,7 +64,9 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
+      <v-spacer></v-spacer>
+      <div>&copy; {{ new Date().getFullYear() }}</div>
+      <v-spacer></v-spacer>
     </v-footer>
   </v-app>
 </template>
