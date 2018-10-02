@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from './../../router'
 
 const state = {
   tokens: JSON.parse(localStorage.getItem('SB-Vue-admin')) || {},
@@ -41,7 +42,6 @@ const mutations = {
 }
 
 const actions = {
-
     AUTH_REQUEST ({commit, dispatch}, user) {
         return new Promise((resolve, reject) => {
             commit('AUTH_REQUEST')
@@ -79,6 +79,7 @@ const actions = {
             resolve(resp)
         })
         .catch(err => {
+          router.push('/login')
           localStorage.removeItem('SB-Vue-admin')
           commit('SKIP_INTERCEPTOR', false)
           commit('AUTH_LOGOUT')
@@ -86,13 +87,26 @@ const actions = {
         })
       })
     },
+    INVALID_TOKEN ({commit, dispatch}) {
+      return new Promise((resolve, reject) => {
+        router.push('/login')
+        commit('AUTH_LOGOUT')
+        localStorage.removeItem('SB-Vue-admin')
+        resolve()
+      })
+    },
     AUTH_LOGOUT ({commit, dispatch}) {
         return new Promise((resolve, reject) => {
+          axios({url: '/logout', method: 'GET'})
+          .then(resp => {
+            router.push('/login')
             commit('AUTH_LOGOUT')
             localStorage.removeItem('SB-Vue-admin')
-            // remove the axios default header
-            // delete axios.defaults.headers.common['x-access-token']
-            resolve()
+            resolve(resp)
+          })
+          .catch(err => {
+            reject(err)
+          })
         })
     }
 }

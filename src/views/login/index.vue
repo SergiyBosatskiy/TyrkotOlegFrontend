@@ -64,7 +64,7 @@
           const { login, password } = this
           this.$store.dispatch('AUTH_REQUEST', { login, password })
           .then(() => this.$router.push('/'))
-          .catch((err) => console.log('Помилка актіонc vuex store вернув реджект ',err))
+          .catch((err) => console.log('Помилка актіонc vuex store вернув реджект ', err))
      } }
     }
   }

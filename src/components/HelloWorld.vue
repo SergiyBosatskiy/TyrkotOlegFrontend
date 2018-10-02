@@ -30,13 +30,14 @@
       	// axios.defaults.headers.common['x-access-token'] = this.$store.state.auth.tokens.auth.accessToken
         axios.post('/test', {provirka: 'mememeemem'}).then(r=>{
         	console.log('axios ', r)
-        }).catch((e)=>{console.log('helloworld ',e.response.data.message)})      },
-        logout () {
+        }).catch((e)=>{console.log('helloworld ', e.response.data.message)})
+        },
+
+      logout () {
       this.$store.dispatch('AUTH_LOGOUT')
-      .then(()=>this.$router.push('/login'))
+        // .then(()=>this.$router.push('/login'))
+      }
     }
-    },
-    
   }
 
 

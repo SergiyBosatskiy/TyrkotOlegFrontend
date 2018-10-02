@@ -37,10 +37,11 @@ export default {
 
     axios.interceptors.response.use(function (response) {
     // Do something with response data
-    console.log('otvet ', response)
     return response;
   }, function (error) {
-    // Do something with response error
+    if (error.response.status === 470) {
+      store.dispatch('INVALID_TOKEN')
+    }
     return Promise.reject(error);
   });
   }
