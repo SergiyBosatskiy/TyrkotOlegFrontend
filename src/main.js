@@ -7,13 +7,15 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import store from './store'
 import axios from 'axios'
+import VueIziToast from 'vue-izitoast'
+import 'izitoast/dist/css/iziToast.min.css'
 
 Vue.use(Vuetify)
-
+Vue.use(VueIziToast)
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = (process.env.NODE_ENV !== 'production') ? 'http://localhost:7070/admin' : ''
+axios.defaults.baseURL = (process.env.NODE_ENV !== 'production') ? 'http://localhost:7070/admin' : '/admin'
 
 
 /* eslint-disable no-new */

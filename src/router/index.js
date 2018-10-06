@@ -6,7 +6,8 @@ import constantRouterMap from './routers'
 Vue.use(Router)
 
 const router = new Router({
-	// mode: 'history',
+	base: '/admin',
+  mode: 'history',
 	routes: constantRouterMap
 })
 

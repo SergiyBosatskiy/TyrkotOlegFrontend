@@ -29,7 +29,8 @@
       tt () {
       	// axios.defaults.headers.common['x-access-token'] = this.$store.state.auth.tokens.auth.accessToken
         axios.post('/test', {provirka: 'mememeemem'}).then(r=>{
-        	console.log('axios ', r)
+          console.log('axios ', r)
+          this.$toast.success('Successfully inserted record!', 'jfsfs',{balloon: false});
         }).catch((e)=>{console.log('helloworld ', e.response.data.message)})
         },
 
